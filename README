@@ -1,0 +1,49 @@
+Pottery allows you to emerge class definitions via calling assignment methods and
+persist instances to a database; requires Morph and Soup gems.
+
+[Note still in pre-alpha development]
+
+== Pottery example
+
+Here's example code showing Pottery playing with Hpricot:
+
+> sqlite3 soup.db
+
+> irb
+
+ require 'hpricot'; require 'open-uri'; require 'pottery'
+
+ class Hubbit
+   include Pottery
+
+   def initialize name
+     doc = Hpricot open("http://github.com/#{name}")
+
+     (doc/'label').collect do |node|
+       label = node.inner_text
+       value = node.next_sibling.inner_text.strip
+
+       morph(label, value)
+     end
+   end
+ end
+
+ def Hubbit name; Hubbit.new name; end
+
+
+The model emerges from the data. Let's start by looking up 'why':
+
+ why = Hubbit 'why'
+
+What new methods do we have?
+
+ Hubbit.morph_methods # => ["email", "email=", "name", "name="]
+
+Ah-ha, so we have a name attribute now:
+
+ why.name #=> "why the lucky stiff"
+
+
+
+See LICENSE for the terms of this software.
+
