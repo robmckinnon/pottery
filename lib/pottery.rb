@@ -11,27 +11,45 @@ module Pottery
 
   def self.included(base)
     Soup.prepare
+    base.extend Pottery::ClassMethods, Morph::ClassMethods
     base.send(:include, Morph::InstanceMethods)
-    base.extend Morph::ClassMethods
+    base.send(:include, Morph::MethodMissing)
     base.send(:include, InstanceMethods)
   end
 
   class PotterySnip < Snip
-    def get_value(name)
-      super
-    end
+    def set_value(name, value); super; end
+  end
 
-    def set_value(name, value)
-      super
+  module ClassMethods
+    def restore name
+      snip = Pottery::PotterySnip[name]
+      if snip
+        instance = self.new
+        instance.morph snip.attributes unless snip.attributes.empty?
+        instance
+      else
+        nil
+      end
     end
   end
 
   module InstanceMethods
 
     def save
-      @snip.save if @snip
+      if respond_to?('name') && !name.nil? && !(name.to_s.strip.size == 0)
+        @snip ||= Pottery::PotterySnip.new
+        morph_attributes.each_pair do |symbol, value|
+          @snip.set_value(symbol.to_s, value)
+        end
+        @snip.save
+        self
+      else
+        raise 'unique name must be defined'
+      end
     end
 
+=begin
     def method_missing symbol, *args
       is_writer = symbol.to_s =~ /=\Z/
       if is_writer
@@ -63,6 +81,6 @@ module Pottery
         super
       end
     end
+=end
   end
-
 end

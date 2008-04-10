@@ -16,7 +16,7 @@ Here's example code showing Pottery playing with Hpricot:
  class Hubbit
    include Pottery
 
-   def initialize name
+   def initialize name=nil
      doc = Hpricot open("http://github.com/#{name}")
 
      (doc/'label').collect do |node|
@@ -28,12 +28,10 @@ Here's example code showing Pottery playing with Hpricot:
    end
  end
 
- def Hubbit name; Hubbit.new name; end
-
 
 The model emerges from the data. Let's start by looking up 'why':
 
- why = Hubbit 'why'
+ why = Hubbit.new 'why'
 
 What new methods do we have?
 

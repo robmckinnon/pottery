@@ -53,8 +53,8 @@ module PotterySpecHelperMethods
 end
 
 describe "class with generated accessor methods added", :shared => true do
-
   include PotterySpecHelperMethods
+
   before :all do initialize_pottery; end
   after  :all do remove_morph_methods; end
 
@@ -83,13 +83,8 @@ end
 describe "class without generated accessor methods added", :shared => true do
   include PotterySpecHelperMethods
 
-  before :all do
-    initialize_pottery
-  end
-
-  after :all do
-    remove_morph_methods
-  end
+  before :all do initialize_pottery; end
+  after :all do remove_morph_methods; end
 
   it 'should not add reader method to class instance_methods list' do
     instance_methods.should_not include(@attribute)
