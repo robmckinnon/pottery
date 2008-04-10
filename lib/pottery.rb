@@ -28,6 +28,10 @@ module Pottery
 
   module InstanceMethods
 
+    def save
+      @snip.save if @snip
+    end
+
     def method_missing symbol, *args
       is_writer = symbol.to_s =~ /=\Z/
       if is_writer
@@ -46,7 +50,9 @@ module Pottery
           # end
 
           # alternative 3:
-          base.class_def(attribute) { @snip.get_value(attribute) }
+          base.class_def(attribute) do
+            @snip.get_value(attribute)
+          end
           base.class_def("#{attribute}=") do |value|
             @snip ||= Pottery::PotterySnip.new
             @snip.set_value(attribute, value)
