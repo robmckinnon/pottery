@@ -1,11 +1,6 @@
 require 'morph'
 require 'soup'
 
-# require 'ruby2ruby'
-# class Example; include Pottery; end
-# e = Example.new
-# e.noise = 'blue'
-# puts RubyToRuby.translate(Example)
 module Pottery
   VERSION = "0.1.0"
 
