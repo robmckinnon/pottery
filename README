@@ -11,19 +11,23 @@ Here's example code showing Pottery playing with Hpricot:
 
 > irb
 
- require 'hpricot'; require 'open-uri'; require 'pottery'
+ require 'pottery'
+ require 'hpricot'; require 'open-uri'
 
  class Hubbit
    include Pottery
 
    def initialize name=nil
-     doc = Hpricot open("http://github.com/#{name}")
+     if name
+       doc = Hpricot open("http://github.com/#{name}")
 
-     (doc/'label').collect do |node|
-       label = node.inner_text
-       value = node.next_sibling.inner_text.strip
+       (doc/'label').collect do |node|
+         label = node.inner_text
+         value = node.next_sibling.inner_text.strip
 
-       morph(label, value)
+         morph(label, value)
+       end
+       morph(:id_name, name)
      end
    end
  end
@@ -40,6 +44,16 @@ What new methods do we have?
 Ah-ha, so we have a name attribute now:
 
  why.name #=> "why the lucky stiff"
+
+
+Let's save why for later
+
+ why.save
+
+
+Ok, now it's later, let's restore why from the database
+
+ why = Hubbit.restore('why') #=> <Hubbit @id_name="why", @name="why the lucky stiff", @email="why@why...">
 
 
 

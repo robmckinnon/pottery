@@ -26,7 +26,14 @@ module Pottery
       snip = Pottery::PotterySnip[name]
       if snip
         instance = self.new
-        instance.morph snip.attributes unless snip.attributes.empty?
+        attributes = snip.attributes
+        unless attributes.empty?
+          id_name = attributes.delete('name')
+          name = attributes.delete('name_name')
+          attributes['id_name'] = id_name if id_name
+          attributes['name'] = name if name
+          instance.morph attributes
+        end
         instance
       else
         nil
@@ -37,18 +44,31 @@ module Pottery
   module InstanceMethods
 
     def save
-      if respond_to?('name') && !name.nil? && !(name.to_s.strip.size == 0)
-        @snip ||= Pottery::PotterySnip.new
+      if respond_to?('id_name') && !id_name.nil? && !(id_name.to_s.strip.size == 0)
+        snip = Pottery::PotterySnip.new
         morph_attributes.each_pair do |symbol, value|
-          @snip.set_value(symbol.to_s, value)
+          symbol = convert_if_name_or_id_name(symbol)
+          snip.set_value(symbol.to_s, value)
         end
-        @snip.save
+        snip.save
         self
       else
-        raise 'unique name must be defined'
+        raise 'unique id_name must be defined'
       end
     end
 
+    private
+
+    def convert_if_name_or_id_name(symbol)
+      case symbol
+        when :id_name
+          :name
+        when :name
+          :name_name
+        else
+          symbol
+      end
+    end
 =begin
     def method_missing symbol, *args
       is_writer = symbol.to_s =~ /=\Z/

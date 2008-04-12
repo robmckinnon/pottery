@@ -43,21 +43,21 @@ describe Pottery, "when reader method that doesn't exist is called" do
 end
 
 
-describe Pottery, "when save method is called after name has been set" do
+describe Pottery, "when save method is called after id_name has been set" do
   include PotterySpecHelperMethods
 
   after :each do remove_morph_methods; end
 
   it 'should call save on the Snip instance' do
     initialize_pottery_and_snip
-    @pottery.name = 'red'
+    @pottery.id_name = 'red'
     @snip.should_receive(:save)
     @pottery.save
   end
 
   it 'should call set_value on the Snip instance with attribute and value' do
     initialize_pottery_and_snip
-    @pottery.name = 'red'
+    @pottery.id_name = 'red'
 
     @snip.stub!(:save)
     @snip.should_receive(:set_value).with('name', 'red')
@@ -66,7 +66,33 @@ describe Pottery, "when save method is called after name has been set" do
 end
 
 
-describe Pottery, "when save method is called after name has not been set" do
+describe Pottery, "when save method is called after name and id_name has been set" do
+  include PotterySpecHelperMethods
+
+  after :each do remove_morph_methods; end
+
+  it 'should call save on the Snip instance' do
+    initialize_pottery_and_snip
+    @pottery.id_name = 'red'
+    @pottery.name = 'blue'
+    @snip.should_receive(:save)
+    @pottery.save
+  end
+
+  it 'should call set_value on the Snip instance with attribute and value' do
+    initialize_pottery_and_snip
+    @pottery.id_name = 'red'
+    @pottery.name = 'blue'
+
+    @snip.stub!(:save)
+    @snip.should_receive(:set_value).with('name', 'red')
+    @snip.should_receive(:set_value).with('name_name', 'blue')
+    @pottery.save
+  end
+end
+
+
+describe Pottery, "when save method is called after id_name has not been set" do
   include PotterySpecHelperMethods
 
   after :all do remove_morph_methods; end
@@ -74,7 +100,7 @@ describe Pottery, "when save method is called after name has not been set" do
   it 'should call save on the Snip instance' do
     initialize_pottery_and_snip
     @pottery.colour = 'red'
-    lambda { @pottery.save }.should raise_error(/unique name must be defined/)
+    lambda { @pottery.save }.should raise_error(/unique id_name must be defined/)
   end
 end
 
