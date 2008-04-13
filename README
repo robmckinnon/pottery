@@ -1,7 +1,7 @@
 Pottery allows you to emerge class definitions via calling assignment methods and
 persist instances to a database; requires Morph and Soup gems.
 
-[Note still in pre-alpha development]
+[Note API subject to change]
 
 == Pottery example
 
