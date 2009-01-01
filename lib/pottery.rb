@@ -2,7 +2,7 @@ require 'morph'
 require 'soup'
 
 module Pottery
-  VERSION = "0.1.2"
+  VERSION = "0.1.3"
 
   def self.included(base)
     Soup.prepare
@@ -18,16 +18,16 @@ module Pottery
 
   module ClassMethods
     def restore name
-      snip = Soup[name]
-      if snip && snip != []
-        if snip.is_a? Array
-          last = snip.pop
+      existing = Soup[name]
+      if existing && !(existing.is_a?(Array) && existing.empty?)
+        if existing.is_a? Array
+          last = existing.pop
           puts 'deleting duplicates for id: ' + name
-          snip.each {|x| x.destroy}
-          snip = last
+          existing.each {|x| x.destroy}
+          existing = last
         end
         instance = self.new
-        attributes = snip.attributes
+        attributes = existing.attributes
         unless attributes.empty?
           id_name = attributes.delete('name')
           name = attributes.delete('name_name')
@@ -47,7 +47,7 @@ module Pottery
     def save
       if respond_to?('id_name') && !id_name.nil? && !(id_name.to_s.strip.size == 0)
         existing = Soup[id_name]
-        if existing && existing != []
+        if existing && !(existing.is_a?(Array) && existing.empty?)
           if existing.is_a? Array
             last = existing.pop
             puts 'deleting duplicates for id: ' + id_name
