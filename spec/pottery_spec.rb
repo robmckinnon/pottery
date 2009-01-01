@@ -52,6 +52,7 @@ describe Pottery, "when save method is called after id_name has been set" do
     initialize_pottery_and_snip
     @pottery.id_name = 'red'
     @snip.should_receive(:save)
+    Soup.should_receive('[]'.to_sym).with('red').and_return []
     @pottery.save
   end
 
@@ -61,6 +62,7 @@ describe Pottery, "when save method is called after id_name has been set" do
 
     @snip.stub!(:save)
     @snip.should_receive(:set_value).with('name', 'red')
+    Soup.should_receive('[]'.to_sym).with('red').and_return []
     @pottery.save
   end
 end
@@ -76,6 +78,7 @@ describe Pottery, "when save method is called after name and id_name has been se
     @pottery.id_name = 'red'
     @pottery.name = 'blue'
     @snip.should_receive(:save)
+    Soup.should_receive('[]'.to_sym).with('red').and_return []
     @pottery.save
   end
 
@@ -87,6 +90,7 @@ describe Pottery, "when save method is called after name and id_name has been se
     @snip.stub!(:save)
     @snip.should_receive(:set_value).with('name', 'red')
     @snip.should_receive(:set_value).with('name_name', 'blue')
+    Soup.should_receive('[]'.to_sym).with('red').and_return []
     @pottery.save
   end
 end

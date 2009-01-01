@@ -2,7 +2,7 @@ require 'morph'
 require 'soup'
 
 module Pottery
-  VERSION = "0.1.1"
+  VERSION = "0.1.2"
 
   def self.included(base)
     Soup.prepare
@@ -20,6 +20,12 @@ module Pottery
     def restore name
       snip = Soup[name]
       if snip && snip != []
+        if snip.is_a? Array
+          last = snip.pop
+          puts 'deleting duplicates for id: ' + name
+          snip.each {|x| x.destroy}
+          snip = last
+        end
         instance = self.new
         attributes = snip.attributes
         unless attributes.empty?
@@ -40,7 +46,18 @@ module Pottery
 
     def save
       if respond_to?('id_name') && !id_name.nil? && !(id_name.to_s.strip.size == 0)
-        snip = Pottery::PotterySnip.new
+        existing = Soup[id_name]
+        if existing && existing != []
+          if existing.is_a? Array
+            last = existing.pop
+            puts 'deleting duplicates for id: ' + id_name
+            existing.each {|x| x.destroy}
+            existing = last
+          end
+          snip = Pottery::PotterySnip.new existing.attributes.merge({:__id => existing.id})
+        else
+          snip = Pottery::PotterySnip.new
+        end
         morph_attributes.each_pair do |symbol, value|
           symbol = convert_if_name_or_id_name(symbol)
           snip.set_value(symbol.to_s, value)
