@@ -11,8 +11,8 @@ Here's example code showing Pottery playing with Hpricot:
 
 > irb
 
- require 'pottery'
- require 'hpricot'; require 'open-uri'
+ require 'rubygems'
+ require 'pottery'; require 'hpricot'; require 'open-uri'
 
  class Hubbit
    include Pottery
@@ -39,7 +39,9 @@ The model emerges from the data. Let's start by looking up 'why':
 
 What new methods do we have?
 
- Hubbit.morph_methods # => ["email", "email=", "name", "name="]
+ Hubbit.morph_methods # => ["email", "email=", "followers", "followers=",
+    "id_name", "id_name=", "member_since", "member_since=", "name", "name=",
+    "public_repos", "public_repos="]
 
 Ah-ha, so we have a name attribute now:
 
@@ -53,7 +55,7 @@ Let's save why for later
 
 Ok, now it's later, let's restore why from the database
 
- why = Hubbit.restore('why') #=> <Hubbit @id_name="why", @name="why the lucky stiff", @email="why@why...">
+ why = Hubbit.restore('why') #=> <Hubbit @id_name="why", @name="why the lucky stiff" ...>
 
 
 

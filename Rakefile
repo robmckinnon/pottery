@@ -12,7 +12,7 @@ begin
     m.rubyforge_name = "pottery"
     m.rdoc_options << '--inline-source'
     m.rdoc_pattern = ["README", "CHANGELOG", "LICENSE"]
-    m.dependencies = ["soup =0.1.5", "morph >=0.1.5"]
+    m.dependencies = ["soup >=0.2.1", "morph >=0.1.5"]
   end
 
 rescue LoadError

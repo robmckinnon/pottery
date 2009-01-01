@@ -111,12 +111,12 @@ describe Pottery, "when restore method is called with name on class" do
     initialize_pottery_and_snip
     @snip = mock(Pottery::PotterySnip)
     @snip.stub!(:attributes).and_return({})
-    Pottery::PotterySnip.stub!('[]'.to_sym).and_return @snip
+    Soup.stub!('[]'.to_sym).and_return @snip
   end
 
   it 'should call Snip [] load method with given name' do
     name = 'red'
-    Pottery::PotterySnip.should_receive('[]'.to_sym).with(name).and_return nil
+    Soup.should_receive('[]'.to_sym).with(name).and_return []
     @potted_class.restore(name)
   end
 
@@ -125,7 +125,7 @@ describe Pottery, "when restore method is called with name on class" do
   end
 
   it 'should return nil if Snip [] returns nil' do
-    Pottery::PotterySnip.stub!('[]'.to_sym).and_return nil
+    Soup.stub!('[]'.to_sym).and_return []
     @potted_class.restore('red').should be_nil
   end
 
@@ -133,7 +133,7 @@ describe Pottery, "when restore method is called with name on class" do
     attributes = {:name => 'red', :state => 'blue'}
 
     @snip.stub!(:attributes).and_return(attributes)
-    Pottery::PotterySnip.stub!('[]'.to_sym).and_return @snip
+    Soup.stub!('[]'.to_sym).and_return @snip
     instance = mock(@potted_class)
     @potted_class.stub!(:new).and_return instance
 

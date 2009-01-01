@@ -2,7 +2,7 @@ require 'morph'
 require 'soup'
 
 module Pottery
-  VERSION = "0.1.0"
+  VERSION = "0.1.1"
 
   def self.included(base)
     Soup.prepare
@@ -18,8 +18,8 @@ module Pottery
 
   module ClassMethods
     def restore name
-      snip = Pottery::PotterySnip[name]
-      if snip
+      snip = Soup[name]
+      if snip && snip != []
         instance = self.new
         attributes = snip.attributes
         unless attributes.empty?
